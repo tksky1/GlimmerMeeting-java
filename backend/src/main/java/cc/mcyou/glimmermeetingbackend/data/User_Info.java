@@ -3,7 +3,7 @@ package cc.mcyou.glimmermeetingbackend.data;
 import com.alibaba.fastjson.JSON;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
 
@@ -45,12 +45,10 @@ public class User_Info {
     }
 
     public void setPassword(String passwd){
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        this.password = bCryptPasswordEncoder.encode(passwd);
+        this.password = BCrypt.hashpw(passwd, BCrypt.gensalt() );
     }
 
     public boolean matchPassword(String passwd){
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        return bCryptPasswordEncoder.matches(passwd, this.password);
+        return BCrypt.checkpw(passwd, this.password);
     }
 }

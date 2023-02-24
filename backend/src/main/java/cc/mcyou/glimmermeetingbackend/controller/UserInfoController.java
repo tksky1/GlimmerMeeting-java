@@ -7,13 +7,11 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/admin/people")
+@CrossOrigin(origins = "*")
 public class UserInfoController {
 
     @Autowired
@@ -22,7 +20,7 @@ public class UserInfoController {
     @Resource
     LoginData loginData;
 
-    @PutMapping("/")
+    @PutMapping
     public Object putUser(@RequestParam("id")int id, @RequestParam("username")String username,  @RequestParam("real_name")String real_name, @RequestParam("token")String token){
 
         if(!loginData.getToken().containsKey(token) || loginData.getToken().get(token)!=1){
@@ -39,7 +37,7 @@ public class UserInfoController {
         return response;
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public Object deleteUser(@RequestParam("id")int id,  @RequestParam("token")String token){
 
         if(!loginData.getToken().containsKey(token) || loginData.getToken().get(token)!=1){
@@ -54,8 +52,8 @@ public class UserInfoController {
         return response;
     }
 
-    @GetMapping("/")
-    public Object getUsers(@RequestParam("token")String token){
+    @GetMapping
+    public Object GetUsers(@RequestParam("token")String token){
 
         if(!loginData.getToken().containsKey(token) || loginData.getToken().get(token)!=1){
             HashMap<String, Object> response = new HashMap<>();
@@ -67,15 +65,18 @@ public class UserInfoController {
     }
 
     @PostMapping
-    public Object PostUser(@RequestParam("username")String username,@RequestParam("username")String password, @RequestParam("real_name")String real_name, @RequestParam("token")String token){
+    public Object PostUser(@RequestParam("username")String username,@RequestParam("password")String password, @RequestParam("real_name")String real_name, @RequestParam("token")String token){
 
         if(!loginData.getToken().containsKey(token) || loginData.getToken().get(token)!=1){
             HashMap<String, Object> response = new HashMap<>();
             response.put("message", "没有权限，请先登录管理员账号！");
             return response;
         }
+
+        System.out.println("收到post用户请求");
         User_Info user = new User_Info();
         user.setUsername(username);
+        user.setPassword(password);
         user.setReal_name(real_name);
         userInfoRepository.save(user);
         HashMap<String, Object> response = new HashMap<>();

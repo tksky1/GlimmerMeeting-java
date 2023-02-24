@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/login")
+@CrossOrigin(origins = "*")
 public class LoginController {
 
     @Autowired
@@ -21,11 +22,12 @@ public class LoginController {
     LoginData loginData;
 
     @PostMapping
-    public Object login(@RequestParam String username, @RequestParam String password){
+    public Object login(@RequestParam("username") String username, @RequestParam("password") String password){
         User_Info user_info = userInfoRepository.findByUsername(username);
         HashMap<String, String> response = new HashMap<>();
         if (user_info == null || !user_info.matchPassword(password)){
             response.put("message", "用户名或密码错误！");
+            System.out.println("用户"+username+"登录失败，user_info："+user_info);
             return response;
         }
         String uuid = UUID.randomUUID().toString();

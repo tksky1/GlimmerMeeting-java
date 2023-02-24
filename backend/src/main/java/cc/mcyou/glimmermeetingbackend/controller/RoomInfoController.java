@@ -7,12 +7,14 @@ import cc.mcyou.glimmermeetingbackend.data.Room_Info;
 import cc.mcyou.glimmermeetingbackend.data.User_Info;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/admin/rooms")
 public class RoomInfoController {
 
@@ -22,7 +24,7 @@ public class RoomInfoController {
     @Resource
     LoginData loginData;
 
-    @PutMapping("/")
+    @PutMapping
     public Object putRoom(@RequestParam("id")int id, @RequestParam("name")String name,  @RequestParam("info")String info,  @RequestParam("location")String location, @RequestParam("token")String token){
 
         if(!loginData.getToken().containsKey(token) || loginData.getToken().get(token)!=1){
@@ -40,7 +42,7 @@ public class RoomInfoController {
         return response;
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping
     public Object deleteRoom(@RequestParam("id")int id,  @RequestParam("token")String token){
 
         if(!loginData.getToken().containsKey(token) || loginData.getToken().get(token)!=1){
@@ -55,7 +57,7 @@ public class RoomInfoController {
         return response;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public Object getRooms(@RequestParam("token")String token){
 
         if(!loginData.getToken().containsKey(token) || loginData.getToken().get(token)!=1){
@@ -71,7 +73,7 @@ public class RoomInfoController {
 
         if(!loginData.getToken().containsKey(token) || loginData.getToken().get(token)!=1){
             HashMap<String, Object> response = new HashMap<>();
-            response.put("message", "没有权限，请先登录管理员账号！");
+            response.put("message", "没有权限，请先登录管理员账号！"+loginData.getToken().get(token));
             return response;
         }
         Room_Info room = new Room_Info();
