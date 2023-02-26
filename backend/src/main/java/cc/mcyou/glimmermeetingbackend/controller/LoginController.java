@@ -14,7 +14,6 @@ import java.util.UUID;
 @RequestMapping("/login")
 @CrossOrigin(origins = "*")
 public class LoginController {
-
     @Autowired
     UserInfoRepository userInfoRepository;
 
